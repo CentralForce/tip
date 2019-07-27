@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
-const status = require("status");
+const status = require("../mixins/status");
 
 const folderDir = "../pages";
 const fileExtention = "html";
