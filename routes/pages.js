@@ -1,30 +1,32 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs");
-const path = require("path");
 const status = require("../mixins/status");
+const db = require("../mixins/db");
 
-const folderDir = "../pages";
-const fileExtention = "html";
+router.get("/", status.requireToken, async (req, res) => {
+  const page = await db.getPage();
+  if (page) res.send(page);
+  else res.sendStatus(500);
+});
 
-router.get("/", status.requireToken, (req, res) => {
-  fs.readFile(
-    path.join(
-      __dirname,
-      `${folderDir}/${req.body.decoded.name}.${fileExtention}`
-    ),
-    (err, data) => {
-      if (err) res.sendStatus(500);
-      else res.send(data);
-    }
+router.get("/all", status.requireAdmin, async (req, res) => {
+  res.send(await db.getAllPages());
+});
+
+router.get("/create", status.requireAdmin, async (req, res) => {
+  res.sendStatus(
+    (await db.createPage(req.body.name, req.body.data)) ? 200 : 500
   );
 });
 
-router.get("/all", status.requireAdmin, (req, res) => {
-  fs.readdir(path.join(__dirname, folderDir), (err, files) => {
-    if (err) res.sendStatus(500);
-    else res.send(files);
-  });
+router.get("/update", status.requireAdmin, async (req, res) => {
+  res.sendStatus(
+    (await db.updatePage(req.body.name, req.body.data)) ? 200 : 500
+  );
+});
+
+router.get("/remove", status.requireAdmin, async (req, res) => {
+  res.sendStatus((await db.removePage(req.body.name)) ? 200 : 500);
 });
 
 module.exports = router;

@@ -12,8 +12,12 @@
     "nodemon": "^1.19.1"
   },
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "dev-admin": "nodemon index.js admin"
   },
-  "author": "",
-  "license": "ISC"
+  "nodemonConfig": {
+    "ignore": [
+      "db/*"
+    ]
+  }
 }
