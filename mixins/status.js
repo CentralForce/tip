@@ -1,6 +1,6 @@
 const process = require("process");
 const jwt = require("jsonwebtoken");
-const files = require("../mixins/files");
+const db = require("../mixins/db");
 
 class status {
   secret = "my-secret";
@@ -9,10 +9,11 @@ class status {
     if (this.isAdmin) next();
     else res.sendStatus(401);
   };
-  requireToken = (req, res, next) => {
-    if (req.body.token != undefined) {
-      jwt.verify(req.body.token, this.secret, (err, decoded) => {
-        if (!err && files.pages.includes(decoded.name)) {
+  requireToken = async (req, res, next) => {
+    if (req.header("Authorization") != undefined) {
+      const token = req.header("Authorization").replace("Bearer ", "");
+      jwt.verify(token, this.secret, async (err, decoded) => {
+        if (!err && (await db.getPage(decoded.name)) !== undefined) {
           req.body.decoded = decoded;
           next();
         } else res.sendStatus(401);

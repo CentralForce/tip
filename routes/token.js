@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/generate", status.requireAdmin, (req, res) => {
-  res.send(jwt.sign({ name: req.body.name }, status.secret));
+  res.send({ token: jwt.sign({ name: req.body.name }, status.secret) });
 });
 
 router.get("/resolve", status.requireToken, (req, res) => {
@@ -12,7 +12,7 @@ router.get("/resolve", status.requireToken, (req, res) => {
 });
 
 router.get("/admin", status.requireAdmin, (req, res) => {
-  res.send(jwt.sign({ name: "admin" }, status.secret));
+  res.send({ token: jwt.sign({ name: "admin" }, status.secret) });
 });
 
 module.exports = router;

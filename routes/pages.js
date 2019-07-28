@@ -3,8 +3,8 @@ const router = express.Router();
 const status = require("../mixins/status");
 const db = require("../mixins/db");
 
-router.get("/", status.requireToken, async (req, res) => {
-  const page = await db.getPage();
+router.get("/get", status.requireToken, async (req, res) => {
+  const page = await db.getPage(req.body.decoded.name);
   if (page) res.send(page);
   else res.sendStatus(500);
 });
