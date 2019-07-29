@@ -6,7 +6,7 @@ const db = require("../mixins/db");
 router.get("/get", status.requireToken, async (req, res) => {
   const page = await db.getPage(req.body.decoded.name);
   if (page) res.send(page);
-  else res.sendStatus(500);
+  else res.sendStatus(401);
 });
 
 router.get("/all", status.requireAdmin, async (req, res) => {
